@@ -13,6 +13,9 @@ from bs4 import BeautifulSoup
 import asyncio
 import httpx
 import json
+import vlc
+import time
+from datetime import datetime
 import os
 
 # 加载环境变量
@@ -29,14 +32,22 @@ mqtt_port = int(os.getenv("MQTT_PORT", 1883))
 mqtt_username = os.getenv("MQTT_USERNAME")
 mqtt_password = os.getenv("MQTT_PASSWORD")
 
+sovits_base_url = os.getenv("SOVITS_BASE_URL")
+ref_audio_path = os.getenv("REF_AUDIO_PATH")
+prompt_text = os.getenv("PROMPT_TEXT")
+prompt_lang = os.getenv("PROMPT_LANG")
+
 # 初始化
 tts_engine = pyttsx3.init()
 voices = tts_engine.getProperty("voices")
 tts_engine.setProperty("voice", voices[-1].id)
 
-porcupine = pvporcupine.create(keywords=["爱丽丝"], access_key=picovoice_access_key,
-                               keyword_paths=['./wakewords/爱丽丝_zh_windows_v3_0_0.ppn'],
-                               model_path='./wakewords/porcupine_params_zh.pv')
+porcupine = pvporcupine.create(
+    keywords=["爱丽丝"],
+    access_key=picovoice_access_key,
+    keyword_paths=["./wakewords/爱丽丝_zh_windows_v3_0_0.ppn"],
+    model_path="./wakewords/porcupine_params_zh.pv",
+)
 
 recognizer = sr.Recognizer()
 recognizer.operation_timeout = 10
@@ -51,6 +62,7 @@ tools = [
         "function": {
             "name": "search_duckduckgo",
             "description": "使用DuckDuckGo搜索引擎查询信息。可以搜索最新新闻、文章、博客等内容。",
+            "strict": True,
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -61,6 +73,7 @@ tools = [
                     }
                 },
                 "required": ["keywords"],
+                "addtionalProperties": False,
             },
         },
     },
@@ -69,37 +82,54 @@ tools = [
         "function": {
             "name": "send_mqtt_message",
             "description": "发送 MQTT 消息到指定主题",
+            "strict": True,
             "parameters": {
                 "type": "object",
                 "properties": {
                     "topic": {
                         "type": "string",
-                        "description": "MQTT 主题，例如：test/topic"
+                        "description": "MQTT 主题，例如：test/topic",
                     },
                     "message": {
                         "type": "string",
-                        "description": "要发送的消息内容"
-                    }
+                        "description": "要发送的消息内容",
+                    },
                 },
-                "required": ["topic", "message"]
+                "required": ["topic", "message"],
+                "addtionalProperties": False,
             },
         },
-    }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_current_datetime",
+            "description": "获取当前的日期和时间",
+            "strict": True,
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "addtionalProperties": False,
+            },
+        },
+    },
 ]
 
 
-async def fetch_url(url: str):
-    """
-    异步获取指定URL的网页内容并提取文本。
+async def fetch_url(url: str) -> str:
+    """异步获取指定URL的网页内容并提取文本。
 
-    Parameters:
+    使用httpx进行异步HTTP请求，并使用BeautifulSoup提取网页文本内容。
+    会自动清理和格式化提取的文本。
+
+    Args:
         url (str): 要获取内容的网页URL
 
     Returns:
         str: 提取的网页文本内容，经过清理和格式化
 
     Raises:
-        httpx.RequestError: 当请求失败时抛出
+        httpx.RequestError: 当HTTP请求失败时抛出
     """
     async with httpx.AsyncClient() as client:
         try:
@@ -118,29 +148,31 @@ async def fetch_url(url: str):
             print(f"An error occurred while requesting {exc.request.url!r}.")
 
 
-async def crawl_web(urls: list[str]):
-    """
-    并发爬取多个URL的内容。
+async def crawl_web(urls: list[str]) -> list[str]:
+    """并发爬取多个URL的内容。
 
-    Parameters:
+    使用asyncio.gather实现并发请求，提高爬取效率。
+
+    Args:
         urls (list[str]): 要爬取的URL列表
 
     Returns:
-        list: 所有URL的爬取结果列表
+        list[str]: 所有URL的爬取结果列表，每个元素为对应URL的文本内容
     """
     results = await asyncio.gather(*(fetch_url(url) for url in urls))
     return results
 
 
-def search_duckduckgo(keywords: list[str]):
-    """
-    使用 DuckDuckGo 搜索引擎执行查询并获取详细内容。
+def search_duckduckgo(keywords: list[str]) -> list[str]:
+    """使用 DuckDuckGo 搜索引擎执行查询并获取详细内容。
 
-    Parameters:
+    执行搜索并对结果页面进行爬取，获取完整的页面内容。
+
+    Args:
         keywords (list[str]): 搜索关键词列表
 
     Returns:
-        list: 搜索结果页面的完整文本内容列表
+        list[str]: 搜索结果页面的完整文本内容列表
 
     Example:
         >>> search_duckduckgo(['Python', '机器学习'])
@@ -156,21 +188,37 @@ def search_duckduckgo(keywords: list[str]):
         backend="html",
     )
     for i, result in enumerate(results, start=1):
-        print(f"Result {i}")
-        print(result["title"])
-        print(result["href"])
-        print(result["body"])
-        print()
+        print(f"Index {i}: {result['href']} {result['title']}")
 
     urls = [result["href"] for result in results]
     response_results = asyncio.run(crawl_web(urls))
     return response_results
+
+
+def get_current_datetime() -> str:
+    """获取当前的日期和时间。
+
+    用于向AI助手提供时间感知能力，返回格式化的日期时间字符串。
+
+    Returns:
+        str: 当前日期和时间的字符串表示
+              格式示例: "2024-02-20 15:30:45.123456"
+
+    Example:
+        >>> get_current_datetime()
+        '2024-02-20 15:30:45.123456'
+    """
+    print("获取当前的日期和时间")
+    now = datetime.now()
+    return str(now)
+
 
 def connect_mqtt():
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     client.username_pw_set(mqtt_username, mqtt_password)
     client.connect(mqtt_broker, mqtt_port, 60)
     return client
+
 
 def send_mqtt_message(topic, message):
     """发送 MQTT 消息到指定主题"""
@@ -181,6 +229,7 @@ def send_mqtt_message(topic, message):
         return f"消息已成功发送到主题: {topic}"
     else:
         return f"消息发送失败，状态码: {status}"
+
 
 def call_function(name: str, args: dict[str, str]):
     """
@@ -196,11 +245,13 @@ def call_function(name: str, args: dict[str, str]):
     Raises:
         ValueError: 当指定的函数名不存在时抛出
     """
-    if name == "search_duckduckgo":
-        return search_duckduckgo(**args)
-    
-    if name == "send_mqtt_message":
-        return send_mqtt_message(**args)
+    match name:
+        case "search_duckduckgo":
+            return search_duckduckgo(**args)
+        case "get_current_datetime":
+            return get_current_datetime(**args)
+        case "send_mqtt_message":
+            return send_mqtt_message(**args)
 
 
 def detect_wake_word():
@@ -276,15 +327,16 @@ def listen_for_commands() -> str:
     return command
 
 
-def speak(sentence: str):
-    """
-    使用文字转语音引擎朗读文本。
+def speak(text: str):
+    """使用文字转语音引擎朗读文本。
 
-    使用 pyttsx3 引擎将文本转换为语音输出，
-    同时在控制台打印输出内容。
+    使用 pyttsx3 引擎或 sovits 引擎将文本转换为语音输出，
+    同时在控制台打印输出内容。支持的引擎通过SPEAKER_ENGINE环境变量配置：
+    - pyttsx3: 使用本地TTS引擎
+    - sovits: 使用远程Sovits服务（需要配置SOVITS_BASE_URL等参数）
 
-    Parameters:
-        sentence (str): 需要朗读的文本内容
+    Args:
+        text (str): 需要朗读的文本内容
 
     Returns:
         None
@@ -293,14 +345,44 @@ def speak(sentence: str):
         >>> speak("你好，我是语音助手")
         Assistant: 你好，我是语音助手
     """
-    print(f"Assistant: {sentence}")
-    tts_engine.say(sentence)
-    tts_engine.runAndWait()
+    print(f"Assistant: {text}")
+    audio_url = f"{sovits_base_url}?text={text}&text_lang=zh&ref_audio_path={ref_audio_path}&prompt_text={prompt_text}&prompt_lang={prompt_lang}&streaming_mode=true&text_split_method=cut1"
+    player = vlc.MediaPlayer(audio_url)
+    player.play()
+    time.sleep(1)
+
+    while True:
+        state = player.get_state()
+        if state in [vlc.State.Ended, vlc.State.Error]:
+            break
+        time.sleep(0.5)
+
+
+def single_chat_completion():
+    """执行单次与OpenAI API的对话请求。
+
+    使用当前的对话历史创建一个新的对话补全请求。
+
+    Returns:
+        ChatCompletion: OpenAI API的响应对象
+
+    Raises:
+        TimeoutError: 请求超时时抛出（5秒）
+    """
+    print("正在询问AI")
+    completion = chat_client.chat.completions.create(
+        model=chat_model,
+        messages=conversation_history,
+        tools=tools,
+        timeout=5,
+    )
+    conversation_history.append(completion.choices[0].message)
+    print("询问完毕")
+    return completion
 
 
 def get_model_response(user_input: str) -> str:
-    """
-    调用 OpenAI API 获取对话回复。
+    """调用 OpenAI API 获取对话回复。
 
     功能：
     1. 将用户输入添加到对话历史
@@ -309,7 +391,7 @@ def get_model_response(user_input: str) -> str:
     4. 处理工具调用结果并生成最终回复
     5. 维护对话上下文
 
-    Parameters:
+    Args:
         user_input (str): 用户的输入文本
 
     Returns:
@@ -325,13 +407,8 @@ def get_model_response(user_input: str) -> str:
                 "content": user_input,
             }
         )
-        completion = chat_client.chat.completions.create(
-            model=chat_model,
-            messages=conversation_history,
-            tools=tools,
-        )
-        conversation_history.append(completion.choices[0].message)
-        if completion.choices[0].message.tool_calls:
+        completion = single_chat_completion()
+        while completion.choices[0].message.tool_calls:
             for tool_call in completion.choices[0].message.tool_calls:
                 name = tool_call.function.name
                 args = json.loads(tool_call.function.arguments)
@@ -345,25 +422,17 @@ def get_model_response(user_input: str) -> str:
                         "content": result,
                     }
                 )
+            completion = single_chat_completion()
 
-            completion = chat_client.chat.completions.create(
-                model=chat_model,
-                messages=conversation_history,
-                tools=tools,
-            )
-            conversation_history.append(completion.choices[0].message)
-        else:
-            print("No tool calls found")
-        ai_response = completion.choices[0].message.content.strip()
-        return ai_response
+        model_response = completion.choices[0].message.content.strip()
+        return model_response
     except Exception as e:
-        print(f"Error getting model response: {e}")
+        print(f"{type(e).__name__}: {e}")
         return "抱歉，我现在无法回答这个问题。"
 
 
 def start_assistant():
-    """
-    启动语音助手的主循环。
+    """启动语音助手的主循环。
 
     主要功能：
     1. 等待唤醒词激活系统
@@ -385,18 +454,22 @@ def start_assistant():
     Raises:
         KeyboardInterrupt: 用户手动中断程序时抛出
     """
-    print("System UP")
-
+    speak("语音助手已开机")
     print(f"Use model: {chat_model}")
     try:
         while True:
             conversation_history.clear()
+            print("进入待机状态，等待唤醒")
             detect_wake_word()
             unsuccessful_tries = 0
             conversation_history.append(
                 {
                     "role": "system",
-                    "content": "你是一个友好的AI助手，请用简洁的语言回答用户的问题。",
+                    "content": f"""
+                    你是一个友好的AI语音助手，和用户进行日常对话聊天，请用简洁的语言回答用户的问题。
+                    请转化为可以直接读出来的汉字，例如‘气温约-4°C，风速为3-4级，相对湿度约13%’应该转成‘气温约零下四摄氏度，风速为三到四级，相对湿度约百分之十三’。
+                    当前的日期和时间为{get_current_datetime()}
+                    """,
                 }
             )
 
