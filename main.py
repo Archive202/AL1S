@@ -1,3 +1,4 @@
+import urllib.parse
 import pyttsx3
 import speech_recognition as sr
 from pydub import AudioSegment
@@ -14,6 +15,7 @@ import asyncio
 import httpx
 import json
 import vlc
+import urllib
 import time
 from datetime import datetime
 import os
@@ -346,7 +348,8 @@ def speak(text: str):
         Assistant: 你好，我是语音助手
     """
     print(f"Assistant: {text}")
-    audio_url = f"{sovits_base_url}?text={text}&text_lang=zh&ref_audio_path={ref_audio_path}&prompt_text={prompt_text}&prompt_lang={prompt_lang}&streaming_mode=true&text_split_method=cut1"
+    input_text = urllib.parse.quote(text)
+    audio_url = f"{sovits_base_url}?text={input_text}&text_lang=auto&ref_audio_path={ref_audio_path}&prompt_text={prompt_text}&prompt_lang={prompt_lang}&streaming_mode=true&text_split_method=cut1"
     player = vlc.MediaPlayer(audio_url)
     player.play()
     time.sleep(1)
@@ -428,7 +431,7 @@ def get_model_response(user_input: str) -> str:
         return model_response
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
-        return "抱歉，我现在无法回答这个问题。"
+        return "爱丽丝不知道哦。"
 
 
 def start_assistant():
@@ -467,7 +470,8 @@ def start_assistant():
                     "role": "system",
                     "content": f"""
                     你是一个友好的AI语音助手，和用户进行日常对话聊天，请用简洁的语言回答用户的问题。
-                    请转化为可以直接读出来的汉字，例如‘气温约-4°C，风速为3-4级，相对湿度约13%’应该转成‘气温约零下四摄氏度，风速为三到四级，相对湿度约百分之十三’。
+                    你的回答应该会以语音呈现而非文本，所以你不应该使用换行符或者其他特殊字符。
+                    请转化为可以直接读出来的汉字，并添加符合短句习惯的标点符号。例如‘气温约-4°C，风速为3-4级，相对湿度约13%’应该转成‘气温约零下四摄氏度，风速为三到四级，相对湿度约百分之十三’。
                     当前的日期和时间为{get_current_datetime()}
                     """,
                 }
