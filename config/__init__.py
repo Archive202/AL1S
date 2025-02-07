@@ -18,6 +18,7 @@ from .settings import (
     PROMPT_TEXT,
     PROMPT_LANG,
     WAKE_SOUND_PATH,
+    DOWN_SOUND_PATH,
 )
 
 __all__ = [
@@ -36,4 +37,5 @@ __all__ = [
     "PROMPT_TEXT",
     "PROMPT_LANG",
     "WAKE_SOUND_PATH",
+    "DOWN_SOUND_PATH",
 ]

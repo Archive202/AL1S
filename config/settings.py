@@ -37,3 +37,4 @@ PROMPT_LANG = os.getenv("PROMPT_LANG")
 
 # 音频文件路径
 WAKE_SOUND_PATH = os.path.join(PROGRAM_DIR, "assets", "sounds", "wake_sound.mp3")
+DOWN_SOUND_PATH = os.path.join(PROGRAM_DIR, "assets", "sounds", "down_sound.mp3")

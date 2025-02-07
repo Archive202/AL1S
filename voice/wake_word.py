@@ -42,18 +42,11 @@ class WakeWordDetector:
             pcm = stream.read(self.porcupine.frame_length)
             pcm = np.frombuffer(pcm, dtype=np.int16)
             if self.porcupine.process(pcm) >= 0:
-                self._play_wake_sound()
+                wake_sound = AudioSegment.from_file(WAKE_SOUND_PATH)
+                play(wake_sound)
                 break
         
         if 'stream' in locals() and stream.is_active():
             stream.stop_stream()
             stream.close()
         pa.terminate()
-
-    def _play_wake_sound(self):
-        """播放唤醒提示音"""
-        try:
-            wake_sound = AudioSegment.from_file(WAKE_SOUND_PATH)
-            play(wake_sound)
-        except Exception as e:
-            print(f"播放唤醒音效失败: {str(e)}")

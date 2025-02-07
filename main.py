@@ -4,9 +4,11 @@
 
 import speech_recognition as sr
 import json
+from pydub import AudioSegment
+from pydub.playback import play
 from voice import WakeWordDetector, SpeechRecognizer, TextToSpeech
 from llm import OpenAIClient, FunctionCaller
-from config import CHAT_MODEL
+from config import CHAT_MODEL, DOWN_SOUND_PATH
 
 class VoiceAssistant:
     """语音助手主类"""
@@ -37,7 +39,7 @@ class VoiceAssistant:
         
     def start(self):
         """启动语音助手"""
-        self.tts.speak("语音助手已开机")
+        self.tts.speak("爱丽丝已启动！")
         print(f"使用模型: {CHAT_MODEL}")
         
         try:
@@ -45,7 +47,8 @@ class VoiceAssistant:
                 self._wait_wake_word()
                 self._conversation_loop()
         except KeyboardInterrupt:
-            self.tts.speak("退出程序")
+            down_sound = AudioSegment.from_file(DOWN_SOUND_PATH)
+            play(down_sound)
             
     def _wait_wake_word(self):
         """等待唤醒词"""
