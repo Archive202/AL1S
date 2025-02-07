@@ -5,6 +5,7 @@ from pydub.playback import play
 import numpy as np
 import pvporcupine
 import pyaudio
+import paho.mqtt.client as mqtt
 from dotenv import load_dotenv
 from openai import OpenAI
 from duckduckgo_search import DDGS
@@ -19,8 +20,14 @@ load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 openai_base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 chat_model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
 picovoice_access_key = os.getenv("PICOVOICE_ACCESS_KEY")
 recognizer_engine = os.getenv("RECOGNIZER_ENGINE", "google")
+
+mqtt_broker = os.getenv("MQTT_BROKER")
+mqtt_port = int(os.getenv("MQTT_PORT", 1883))
+mqtt_username = os.getenv("MQTT_USERNAME")
+mqtt_password = os.getenv("MQTT_PASSWORD")
 
 # 初始化
 tts_engine = pyttsx3.init()
@@ -54,6 +61,27 @@ tools = [
                     }
                 },
                 "required": ["keywords"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "send_mqtt_message",
+            "description": "发送 MQTT 消息到指定主题",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "topic": {
+                        "type": "string",
+                        "description": "MQTT 主题，例如：test/topic"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "要发送的消息内容"
+                    }
+                },
+                "required": ["topic", "message"]
             },
         },
     }
@@ -138,6 +166,21 @@ def search_duckduckgo(keywords: list[str]):
     response_results = asyncio.run(crawl_web(urls))
     return response_results
 
+def connect_mqtt():
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    client.username_pw_set(mqtt_username, mqtt_password)
+    client.connect(mqtt_broker, mqtt_port, 60)
+    return client
+
+def send_mqtt_message(topic, message):
+    """发送 MQTT 消息到指定主题"""
+    client = connect_mqtt()
+    result = client.publish(topic, message)
+    status = result.rc
+    if status == 0:
+        return f"消息已成功发送到主题: {topic}"
+    else:
+        return f"消息发送失败，状态码: {status}"
 
 def call_function(name: str, args: dict[str, str]):
     """
@@ -155,6 +198,9 @@ def call_function(name: str, args: dict[str, str]):
     """
     if name == "search_duckduckgo":
         return search_duckduckgo(**args)
+    
+    if name == "send_mqtt_message":
+        return send_mqtt_message(**args)
 
 
 def detect_wake_word():
@@ -307,7 +353,7 @@ def get_model_response(user_input: str) -> str:
             )
             conversation_history.append(completion.choices[0].message)
         else:
-            print("No search needed.")
+            print("No tool calls found")
         ai_response = completion.choices[0].message.content.strip()
         return ai_response
     except Exception as e:
