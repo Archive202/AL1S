@@ -1,0 +1,39 @@
+"""
+配置文件包，导出 settings 模块中的配置变量
+"""
+
+from .settings import (
+    OPENAI_API_KEY,
+    OPENAI_BASE_URL,
+    CHAT_MODEL,
+    PICOVOICE_ACCESS_KEY,
+    RECOGNIZER_ENGINE,
+    WAKE_WORD_PATHS,
+    MQTT_BROKER,
+    MQTT_PORT,
+    MQTT_USERNAME,
+    MQTT_PASSWORD,
+    SOVITS_BASE_URL,
+    REF_AUDIO_PATH,
+    PROMPT_TEXT,
+    PROMPT_LANG,
+    WAKE_SOUND_PATH,
+)
+
+__all__ = [
+    "OPENAI_API_KEY",
+    "OPENAI_BASE_URL",
+    "CHAT_MODEL",
+    "PICOVOICE_ACCESS_KEY",
+    "RECOGNIZER_ENGINE",
+    "WAKE_WORD_PATHS",
+    "MQTT_BROKER",
+    "MQTT_PORT",
+    "MQTT_USERNAME",
+    "MQTT_PASSWORD",
+    "SOVITS_BASE_URL",
+    "REF_AUDIO_PATH",
+    "PROMPT_TEXT",
+    "PROMPT_LANG",
+    "WAKE_SOUND_PATH",
+]

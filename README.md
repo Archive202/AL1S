@@ -1,52 +1,46 @@
-# 🎤 Athena
+# AL1S
 
-> A Chinese voice assistant powered by OpenAI's GPT and Python text-to-speech technology, featuring wake word detection and web search capabilities.
+> 嘿嘿爱丽丝可爱捏，总之今天爱丽丝来夏莱当值日生了~
 
-## ✨ Features
+## ✨ 功能
 
-- 🔊 Wake word detection ("Hey Siri")
-- 🗣️ Chinese voice command recognition
-- 🤖 AI-powered conversations using OpenAI GPT
-- 🔍 Web search integration with DuckDuckGo
-- 🌐 Multiple speech recognition engines (Google, Azure)
-- 🔊 Multiple TTS engines (pyttsx3, Sovits)
-- 🎯 Automatic ambient noise adjustment
-- 🔄 Conversation history management
-- ⏲️ Auto-standby mode
-- 🎵 Text-to-speech response in Chinese
-- 🌍 Asynchronous web content extraction
-- 📅 Time-aware responses
+- 🔊 语音唤醒 ("爱丽丝")
+- 🗣️ 中文语音识别
+- 🤖 基于AI的聊天能力 (Openai API)
+- 🔊 GPT-Sovits \[爱丽丝\]TTS语音
+- 🔍 基于Function Calling API实现mqtt控制、网络搜索
 
-## 🛠️ Prerequisites
+## 🛠️ 环境要求
 
 - Python 3.10+
 - [uv](https://github.com/astral-sh/uv) package manager 
 - OpenAI API key
+- GPT-Sovits server
 - [Picovoice Access key](https://console.picovoice.ai/)
 - Azure Speech API key (optional, if using Azure speech recognition)
-- Sovits server (optional, if using Sovits TTS)
 - VLC media player
 - Working microphone and speakers
+- mqtt server (optional)
 
-## 📦 Installation
+## 📦 安装
 
-1. Clone the repository:
+1. 克隆本仓库:
 ```bash
-git clone https://github.com/AbyssSkb/Athena
-cd Athena
+git clone https://github.com/Archive202/AL1S.git
+cd AL1S
 ```
 
-2. Install required packages:
+2. 使用uv安装依赖库:
 ```bash
 uv sync
 ```
 
-3. Install VLC media player:
-   - Windows: Download and install from [VideoLAN official website](https://www.videolan.org/)
+3. 安装 VLC 媒体播放器:
+   - Windows: 前往[官网](https://www.videolan.org/)下载
    - Linux: `sudo apt install vlc`
    - macOS: `brew install vlc`
 
-## ⚙️ Configuration
+## ⚙️ 配置
 
 1. Copy `.env.example` to `.env`:
 ```bash
@@ -55,74 +49,41 @@ cp .env.example .env
 
 2. Update `.env` with your credentials:
 ```bash
+# OpenAI API 配置
 OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 OPENAI_BASE_URL="https://api.openai.com/v1"
 OPENAI_MODEL="gpt-4o-mini"
-PICOVOICE_ACCESS_KEY="YOUR_PICOVOICE_ACCESS_KEY"
-AZURE_KEY="YOUR_AZURE_KEY"           # Optional, for Azure speech recognition
-RECOGNIZER_ENGINE="google"           # Options: "google" or "azure"
-SPEAKER_ENGINE="pyttsx3"            # Options: "pyttsx3" or "sovits"
-SOVITS_BASE_URL="YOUR_SOVITS_BASE_URL" # Required if using Sovits
-REF_AUDIO_PATH="YOUR_REF_AUDIO_PATH"   # Required if using Sovits
-PROMPT_TEXT="YOUR_PROMPT_TEXT"         # Required if using Sovits
-PROMPT_LANG="YOUR_PROMPT_LANG"         # Required if using Sovits
+
+
+# 语音识别配置
+PICOVOICE_ACCESS_KEY="YOUR_PICOVOICE_ACCESS_KEY"    # 前往Picovoice官网获取
+AZURE_KEY="YOUR_AZURE_KEY"                          # 若使用Azure则填写
+RECOGNIZER_ENGINE="google"                          # 默认使用引擎为Google
+
+# MQTT 配置
+MQTT_BROKER="example.com"
+MQTT_PORT=1883
+MQTT_USERNAME="YOUR_MQTT_USERNAME"
+MQTT_PASSWORD="YOUR_MQTT_PASSWORD"
+
+# GSV 配置
+GSV_BASE_URL="YOUR_GSV_BASE_URL"            # GPT-Sovits API服务器地址
+REF_AUDIO_PATH="YOUR_REF_AUDIO_PATH"        # 参考音频路径 (于服务器上)
+PROMPT_TEXT="YOUR_PROMPT_TEXT"              # 参考音频文本
+PROMPT_LANG="YOUR_PROMPT_LANG"              # 参考音频语种
 ```
 
-3. Configure `pyttsx3` for Linux users:
-```bash
-sudo apt update && sudo apt install espeak-ng libespeak1
-```
-> **Note:** This step is only required for Linux users if voice output is not working.
+## 🚀 使用教程
 
-## 🚀 Usage
-
-1. Start the voice assistant:
+1. AL1S, System UP!:
 ```bash
 uv run main.py
 ```
 
-2. Say "Hey Siri" to activate the assistant
-3. Speak your command or question in Chinese
-4. Say "再见", "退出" or "结束" to end the conversation
-
-## ⚡ Quick Commands
-
-- Wake Word: "Hey Siri"
-- Exit Commands: "再见", "退出", "结束"
-
-## 🎯 Features Details
-
-### Speech Recognition
-- Supports Google Speech Recognition and Azure Speech Recognition
-- Automatic ambient noise adjustment
-- 20-second timeout for commands
-- Error retry mechanism (max 3 attempts)
-
-### Text-to-Speech
-- Default engine: pyttsx3 (offline)
-- Alternative: Sovits (requires server setup)
-- Automatic number and symbol conversion for natural speech
-
-### Web Search
-- Integrated DuckDuckGo search
-- Region-specific results (cn-zh)
-- Safe search enabled
-- Asynchronous content extraction
-- Returns detailed content from up to 5 sources
-
-### AI Conversation
-- Powered by OpenAI GPT models
-- Context-aware responses
-- Tool functions support (web search, time query)
-- Natural Chinese language processing
-- Time-aware responses
-
-### Error Handling
-- Automatic retry on failures
-- Graceful timeout handling
-- Clear error messages
-- Auto-standby mode after multiple failures
+2. 启动后说出唤醒词"爱丽丝"以开启聊天
+3. 说出指令或开始聊天
+4. "再见", "退出", "结束"可作为结束词以结束此次回话 
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - [LICENSE](LICENSE)
