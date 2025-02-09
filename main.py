@@ -39,7 +39,7 @@ class VoiceAssistant:
         
     def start(self):
         """启动语音助手"""
-        self.tts.speak("爱丽丝已启动！")
+        self.tts.speak(text="爱丽丝已启动！")
         print(f"使用模型: {CHAT_MODEL}")
         
         try:
@@ -62,7 +62,6 @@ class VoiceAssistant:
         print("已唤醒")
         
         while True:
-            print("输入", end=": ")
             try:
                 user_input = self._get_user_input()
                 print(user_input)

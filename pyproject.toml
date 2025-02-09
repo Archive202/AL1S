@@ -1,7 +1,7 @@
 [project]
-name = "Athena"
+name = "AL1S"
 version = "0.1.0"
-description = "A Chinese voice assistant powered by OpenAI's GPT and Python text-to-speech technology, featuring wake word detection and web search capabilities."
+description = "爱丽丝来夏莱当值日生啦"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -16,5 +16,7 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "python-vlc>=3.0.21203",
     "pyttsx3>=2.98",
+    "requests>=2.32.3",
     "speechrecognition[audio]>=3.14.1",
+    "textual>=1.0.0",
 ]

@@ -7,7 +7,7 @@ import pyaudio
 import pvporcupine
 from pydub import AudioSegment
 from pydub.playback import play
-from config.settings import PICOVOICE_ACCESS_KEY, WAKE_WORD_PATHS, WAKE_SOUND_PATH
+from config import PICOVOICE_ACCESS_KEY, WAKE_WORD_PATHS, WAKE_SOUND_PATH
 
 class WakeWordDetector:
     """唤醒词检测器"""
@@ -19,7 +19,7 @@ class WakeWordDetector:
         self.porcupine = pvporcupine.create(
             keywords=["爱丽丝"],
             access_key=PICOVOICE_ACCESS_KEY,
-            keyword_paths=[WAKE_WORD_PATHS["爱丽丝"]],
+            keyword_paths=[WAKE_WORD_PATHS["wakeword"]],
             model_path=WAKE_WORD_PATHS["porcupine_params"],
         )
 
@@ -36,7 +36,7 @@ class WakeWordDetector:
             input=True,
             frames_per_buffer=self.porcupine.frame_length,
         )
-            
+        
         print("等待唤醒...")
         while True:
             pcm = stream.read(self.porcupine.frame_length)

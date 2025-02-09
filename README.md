@@ -30,14 +30,18 @@ git clone https://github.com/Archive202/AL1S.git
 cd AL1S
 ```
 
-2. 使用uv安装依赖库:
+2. 安装portaudio运行库:
+   - Linux(apt): `sudo apt install portaudio19-dev`
+   - macOS: `brew install portaudio`
+
+3. 使用[uv](https://hellowac.github.io/uv-zh-cn/getting-started/installation/)安装依赖库:
 ```bash
 uv sync
 ```
 
-3. 安装 VLC 媒体播放器:
+1. 安装 VLC 媒体播放器:
    - Windows: 前往[官网](https://www.videolan.org/)下载
-   - Linux: `sudo apt install vlc`
+   - Linux(apt): `sudo apt install vlc`
    - macOS: `brew install vlc`
 
 ## ⚙️ 配置
