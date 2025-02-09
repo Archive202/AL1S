@@ -39,19 +39,14 @@ cd AL1S
 uv sync
 ```
 
-1. 安装 VLC 媒体播放器:
-   - Windows: 前往[官网](https://www.videolan.org/)下载
-   - Linux(apt): `sudo apt install vlc`
-   - macOS: `brew install vlc`
-
 ## ⚙️ 配置
 
-1. Copy `.env.example` to `.env`:
+1. 复制配置模板 `.env.example` 为 `.env`:
 ```bash
 cp .env.example .env
 ```
 
-2. Update `.env` with your credentials:
+2. 配置 `.env` 文件:
 ```bash
 # OpenAI API 配置
 OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
@@ -60,9 +55,14 @@ OPENAI_MODEL="gpt-4o-mini"
 
 
 # 语音识别配置
-PICOVOICE_ACCESS_KEY="YOUR_PICOVOICE_ACCESS_KEY"    # 前往Picovoice官网获取
-AZURE_KEY="YOUR_AZURE_KEY"                          # 若使用Azure则填写
-RECOGNIZER_ENGINE="google"                          # 默认使用引擎为Google
+## 唤醒
+PLATFORM="YOUR_PLATFORM"   # [windows, mac, linux]
+PICOVOICE_ACCESS_KEY="YOUR_PICOVOICE_ACCESS_KEY"   # 前往Picovoice官网获取
+## 语音识别
+RECOGNIZER_ENGINE="google"                         # [google, custom]
+CUSTOM_RECOGNIZER_API_KEY="YOUR_CUSTOM_RECOGNIZER_API_KEY"
+CUSTOM_RECOGNIZER_BASE_URL="CUSTOM_RECOGNIZER_BASE_URL"
+CUSTOM_RECOGNIZER_MODEL="YOUR_CUSTOM_RECOGNIZER_MODEL"                    
 
 # MQTT 配置
 MQTT_BROKER="example.com"
