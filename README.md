@@ -53,7 +53,6 @@ OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 OPENAI_BASE_URL="https://api.openai.com/v1"
 OPENAI_MODEL="gpt-4o-mini"
 
-
 # 语音识别配置
 ## 唤醒
 PLATFORM="YOUR_PLATFORM"   # [windows, mac, linux]
