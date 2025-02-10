@@ -3,7 +3,7 @@ OpenAI 客户端模块，处理与 LLM 的交互
 """
 
 from openai import OpenAI
-from config.settings import OPENAI_API_KEY, OPENAI_BASE_URL, CHAT_MODEL
+from config import OPENAI_API_KEY, OPENAI_BASE_URL, CHAT_MODEL
 
 class OpenAIClient:
     """OpenAI 客户端"""

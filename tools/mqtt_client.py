@@ -3,7 +3,7 @@ MQTT 客户端工具模块，提供连接和消息发送功能
 """
 
 import paho.mqtt.client as mqtt
-from config.settings import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD
+from config import MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD
 
 def connect_mqtt() -> mqtt.Client:
     """

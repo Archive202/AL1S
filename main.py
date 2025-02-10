@@ -34,6 +34,7 @@ class VoiceAssistant:
             你现在正在夏莱担任老师今日的值日生，你将会和老师独处，你称呼用户为老师，进行日常对话聊天，请用符合你人物性格的语言回答老师的问题或者要求。
             你的回答应该会以语音呈现而非文本，所以你不应该使用换行符或者其他特殊字符。
             请转化为可以直接读出来的汉字，并添加符合短句习惯的标点符号。例如‘气温约-4°C，风速为3-4级，相对湿度约13%’应该转成‘气温约零下四摄氏度，风速为三到四级，相对湿度约百分之十三’。
+            当用户向你道别如‘再见‘’拜拜’或者有意愿要结束对话时，输出‘[回话已结束]’
             """
         }
         
@@ -46,6 +47,7 @@ class VoiceAssistant:
             while True:
                 self._wait_wake_word()
                 self._conversation_loop()
+                print("=====================")
         except KeyboardInterrupt:
             down_sound = AudioSegment.from_file(DOWN_SOUND_PATH)
             play(down_sound)
@@ -60,23 +62,28 @@ class VoiceAssistant:
         self.llm_client.conversation_history = [self.system_prompt]
         unsuccessful_tries = 0
         print("已唤醒")
+        print("===New Conversation===")
         
         while True:
             try:
                 user_input = self._get_user_input()
                 print(user_input)
-                if self._should_exit(user_input):
-                    break
                 
                 response = self._process_input(user_input)
+                if response == "[回话已结束]":
+                    self.tts.speak("好的！老师再见!")
+                    break
                 print("回答: ", response)
                 self.tts.speak(response)
                 unsuccessful_tries = 0
                 
             except Exception as e:
-                unsuccessful_tries = self._handle_error(e, unsuccessful_tries)
-                if unsuccessful_tries >= 3:
+                print(f"Error {type(e).__name__}")
+                if e.__class__.__name__ == "WaitTimeoutError" or unsuccessful_tries >= 3:
                     break
+                elif e.__class__.__name__ == "UnknownValueError":
+                    unsuccessful_tries += 1
+            print("--------------------")
                     
     def _get_user_input(self) -> str:
         """获取用户输入"""
@@ -134,16 +141,6 @@ class VoiceAssistant:
                 "content": json.dumps(result, ensure_ascii=False)
             })
         print("工具调用完毕")
-            
-    def _handle_error(self, error, count: int) -> int:
-        """处理错误并返回尝试次数"""
-        error_type = type(error).__name__
-        print(f"{error_type}: {error}")
-        count += 1
-        
-        if count >= 3:
-            self.tts.speak("尝试次数过多，进入待机")
-        return count
 
 if __name__ == "__main__":
     assistant = VoiceAssistant()
