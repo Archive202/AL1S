@@ -96,7 +96,7 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 
 2. After starting, say the wake-up word `爱丽丝` to start chatting
 3. Speak commands or start chatting
-4. End the conversation by saying goodbye in the form of 'bye-bye', 'goodbye', etc
+4. End the conversation by saying goodbye in the form of `bye-bye`, `goodbye`, etc
 
 ## 📝 License
 
