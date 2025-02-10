@@ -19,18 +19,18 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 - 🎤 Voice wake-up ("爱丽丝")
 - 🗣️ Chinese speech recognition
 - 🤖 AI-based chat capabilities (OpenAI API)
-- 🔊 GPT-Sovits text-to-speech
-- 🔍 MQTT control, web search, etc., based on Function Calling API
+- 🔊 `GPT-Sovits` text-to-speech
+- 🔍 MQTT control, web search, etc., based on `Function Calling API`
 
 ## 🛠️ Requirements
 
 - 🐍 Python 3.10+
+- 🎤 Microphone
 - (Required) [uv](https://github.com/astral-sh/uv) Python package manager
 - (Required) OpenAI API key
 - (Required) [GPT-Sovits](https://github.com/RVC-Boss/GPT-SoVITS) API
 - (Required) [Picovoice](https://console.picovoice.ai/) Access Key
 - (Optional) Speech-To-Text AI API (e.g., [SenseVoice](https://github.com/FunAudioLLM/SenseVoice))
-- 🎤 Microphone
 - (Optional) MQTT server
 
 ## 📦 Installation
@@ -41,7 +41,7 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
    cd AL1S
    ```
 
-2. Install the portaudio runtime library (dependency for pyaudio):
+2. Install the `portaudio` runtime library (dependency for `pyaudio`):
    - Linux (apt): `sudo apt install portaudio19-dev`
    - macOS: `brew install portaudio`
 
@@ -94,9 +94,9 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
    uv run main.py
    ```
 
-2. After starting, say the wake-up word "爱丽丝" to start chatting
+2. After starting, say the wake-up word `爱丽丝` to start chatting
 3. Speak commands or start chatting
-4. Use "再见", "退出", or "结束" to end the conversation
+4. Use `再见`, `退出`, or `结束` to end the conversation
 
 ## 📝 License
 

@@ -19,18 +19,18 @@
 - 🎤 语音唤醒 ("爱丽丝")
 - 🗣️ 中文语音识别
 - 🤖 基于AI的聊天能力 (OpenAI API)
-- 🔊 GPT-Sovits 文本转语音
-- 🔍 基于 Function Calling API 实现 mqtt 控制、网络搜索等
+- 🔊 `GPT-Sovits` 文本转语音
+- 🔍 基于 `Function Calling API` 实现 mqtt 控制、网络搜索等
 
 ## 🛠️ 环境要求 Requirements
 
 - 🐍 Python 3.10+
+- 🎤 麦克风
 - (必需) [uv](https://github.com/astral-sh/uv) Python 包管理器
 - (必需) OpenAI API key
 - (必需) [GPT-Sovits](https://github.com/RVC-Boss/GPT-SoVITS) API
 - (必需) [Picovoice](https://console.picovoice.ai/) Access Key
 - (可选) Speech-To-Text AI API (例如: [SenseVoice](https://github.com/FunAudioLLM/SenseVoice))
-- 🎤 麦克风
 - (可选) MQTT 服务器
 
 ## 📦 安装 Installation
@@ -41,7 +41,7 @@
    cd AL1S
    ```
 
-2. 安装 portaudio 运行库 (pyaudio 的依赖):
+2. 安装 `portaudio` 运行库 (`pyaudio` 的依赖):
    - Linux (apt): `sudo apt install portaudio19-dev`
    - macOS: `brew install portaudio`
 
@@ -94,9 +94,9 @@
    uv run main.py
    ```
 
-2. 启动后说出唤醒词 "爱丽丝" 以开启聊天
+2. 启动后说出唤醒词 `爱丽丝` 以开启聊天
 3. 说出指令或开始聊天
-4. 使用 "再见", "退出", 或 "结束" 结束对话
+4. 使用 `再见`, `退出`, 或 `结束` 结束对话
 
 ## 📝 License
 
