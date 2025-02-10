@@ -4,7 +4,9 @@
 
 Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg?style=for-the-badge)](https://www.python.org/downloads/) [![OpenAI](https://img.shields.io/badge/OpenAI-API-green.svg?style=for-the-badge)](https://platform.openai.com/) [![License](https://img.shields.io/badge/LICENSE-MIT-green.svg?style=for-the-badge)](https://github.com/Archive202/AL1S/blob/main/LICENSE)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg?style=for-the-badge)](https://www.python.org/downloads/) 
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-green.svg?style=for-the-badge)](https://platform.openai.com/) 
+[![License](https://img.shields.io/badge/LICENSE-MIT-green.svg?style=for-the-badge)](https://github.com/Archive202/AL1S/blob/main/LICENSE)
 
 **English** | [**中文简体**](./docs/zh/README.md)
 

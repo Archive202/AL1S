@@ -4,7 +4,9 @@
 
 嘿嘿爱丽丝可爱捏，总之今天爱丽丝来夏莱当值日生了~  🌸
 
-[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg?style=for-the-badge)](https://www.python.org/downloads/) [![OpenAI](https://img.shields.io/badge/OpenAI-API-green.svg?style=for-the-badge)](https://platform.openai.com/) [![License](https://img.shields.io/badge/LICENSE-MIT-green.svg?style=for-the-badge)](https://github.com/Archive202/AL1S/blob/main/LICENSE)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg?style=for-the-badge)](https://www.python.org/downloads/) 
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-green.svg?style=for-the-badge)](https://platform.openai.com/) 
+[![License](https://img.shields.io/badge/LICENSE-MIT-green.svg?style=for-the-badge)](https://github.com/Archive202/AL1S/blob/main/LICENSE)
 
 [**English**](./README.md) | **中文简体**
 
