@@ -17,8 +17,8 @@
 ## ✨ 功能 Features
 
 - 🎤 语音唤醒 ("爱丽丝")
-- 🗣️ 中文语音识别
-- 🤖 基于AI的聊天能力 (OpenAI API)
+- 🗣️ `多语种`语音识别 (如使用的AI模型支持)
+- 🤖 基于`AI`的聊天能力 (OpenAI API)
 - 🔊 `GPT-Sovits` 文本转语音
 - 🔍 基于 `Function Calling API` 实现 mqtt 控制、网络搜索等
 

@@ -17,8 +17,8 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 ## ✨ Features
 
 - 🎤 Voice wake-up ("爱丽丝")
-- 🗣️ Chinese speech recognition
-- 🤖 AI-based chat capabilities (OpenAI API)
+- 🗣️ `Multilingual` speech recognition (if using supported AI model)
+- 🤖 `AI-based` chat capabilities (OpenAI API)
 - 🔊 `GPT-Sovits` text-to-speech
 - 🔍 MQTT control, web search, etc., based on `Function Calling API`
 
