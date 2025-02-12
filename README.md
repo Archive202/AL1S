@@ -44,8 +44,8 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 
 2. Install the `vlc` runtime librar (dependency for `python-vlc`):
     - Windows: Download from [offical website](https://www.videolan.org)
-    - Linux (apt): `brew install vlc`
-    - macOS (brew):
+    - Linux (apt): `sudo apt install vlc`
+    - macOS (brew): `brew install vlc`
 
 3. Install the `portaudio` runtime library (dependency for `pyaudio`):
    - Linux (apt): `sudo apt install portaudio19-dev`

@@ -43,8 +43,8 @@
    ```
 2. 安装 `vlc` 运行库 (`python-vlc` 的依赖):
     - Windows: 前往[官网](https://www.videolan.org)安装
-    - Linux (apt): `brew install vlc`
-    - macOS (brew):
+    - Linux (apt): `sudo apt install vlc`
+    - macOS (brew): `brew install --cask vlc`
 
 3. 安装 `portaudio` 运行库 (`pyaudio` 的依赖):
    - Linux (apt): `sudo apt install portaudio19-dev`
