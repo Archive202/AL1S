@@ -27,6 +27,7 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 - 🐍 Python 3.10+
 - 🎤 Microphone
 - (Required) [uv](https://github.com/astral-sh/uv) Python package manager
+- (Required) [VLC](https://www.videolan.org) Media Player
 - (Required) OpenAI API key
 - (Required) [GPT-Sovits](https://github.com/RVC-Boss/GPT-SoVITS) API
 - (Required) [Picovoice](https://console.picovoice.ai/) Access Key
@@ -37,15 +38,20 @@ Hehe, Alice is so cute. Anyway, Alice is on duty at Schale today~ 🌸
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/Archive202/AL1S.git
+   git clone --depth 1 https://github.com/Archive202/AL1S.git
    cd AL1S
    ```
 
-2. Install the `portaudio` runtime library (dependency for `pyaudio`):
+2. Install the `vlc` runtime librar (dependency for `python-vlc`):
+    - Windows: Download from [offical website](https://www.videolan.org)
+    - Linux (apt): `brew install vlc`
+    - macOS (brew):
+
+3. Install the `portaudio` runtime library (dependency for `pyaudio`):
    - Linux (apt): `sudo apt install portaudio19-dev`
    - macOS: `brew install portaudio`
 
-3. Use [uv](https://hellowac.github.io/uv-zh-cn/getting-started/installation/) to install dependencies:
+4. Use [uv](https://hellowac.github.io/uv-zh-cn/getting-started/installation/) to install dependencies:
    ```bash
    uv sync
    ```

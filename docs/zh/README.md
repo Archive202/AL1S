@@ -27,6 +27,7 @@
 - 🐍 Python 3.10+
 - 🎤 麦克风
 - (必需) [uv](https://github.com/astral-sh/uv) Python 包管理器
+- (必需) [VLC](https://www.videolan.org) 媒体播放器
 - (必需) OpenAI API key
 - (必需) [GPT-Sovits](https://github.com/RVC-Boss/GPT-SoVITS) API
 - (必需) [Picovoice](https://console.picovoice.ai/) Access Key
@@ -37,15 +38,19 @@
 
 1. 克隆本仓库:
    ```bash
-   git clone https://github.com/Archive202/AL1S.git
+   git clone --depth 1 https://github.com/Archive202/AL1S.git
    cd AL1S
    ```
+2. 安装 `vlc` 运行库 (`python-vlc` 的依赖):
+    - Windows: 前往[官网](https://www.videolan.org)安装
+    - Linux (apt): `brew install vlc`
+    - macOS (brew):
 
-2. 安装 `portaudio` 运行库 (`pyaudio` 的依赖):
+3. 安装 `portaudio` 运行库 (`pyaudio` 的依赖):
    - Linux (apt): `sudo apt install portaudio19-dev`
-   - macOS: `brew install portaudio`
+   - macOS (brew): `brew install portaudio`
 
-3. 使用 [uv](https://hellowac.github.io/uv-zh-cn/getting-started/installation/) 安装依赖库:
+4. 使用 [uv](https://hellowac.github.io/uv-zh-cn/getting-started/installation/) 安装依赖库:
    ```bash
    uv sync
    ```
